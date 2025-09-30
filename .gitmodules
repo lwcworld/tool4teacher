@@ -2,3 +2,7 @@
 	path = third_party/hwpxlib
 	url = https://github.com/neolord0/hwpxlib.git
 	ignore = dirty
+[submodule "third_party/dots.ocr"]
+	path = third_party/dots.ocr
+	url = https://github.com/rednote-hilab/dots.ocr.git
+	ignore = dirty
