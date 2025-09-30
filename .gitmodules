@@ -1,0 +1,4 @@
+[submodule "third_party/hwpxlib"]
+	path = third_party/hwpxlib
+	url = https://github.com/neolord0/hwpxlib.git
+	ignore = dirty
