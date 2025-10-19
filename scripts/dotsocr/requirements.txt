@@ -1,0 +1,17 @@
+# DotsOCR Python Application Requirements
+
+# Replicate API client
+replicate>=0.25.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# HTTP clients
+requests>=2.31.0
+aiohttp>=3.9.0
+
+# Image processing
+Pillow>=10.0.0
+
+# PDF to image conversion
+pdf2image>=1.16.0
