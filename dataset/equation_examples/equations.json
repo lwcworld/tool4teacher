@@ -1,0 +1,398 @@
+{
+  "description": "LaTeX to HWP equation translation test cases",
+  "version": "1.0",
+  "categories": [
+    {
+      "category": "basic_operations",
+      "description": "기본 사칙연산 및 지수, 첨자",
+      "equations": [
+        {
+          "latex": "x^{2} + y^{2}",
+          "expected_hwp": "x^{2} + y^{2}",
+          "description": "지수 표현",
+          "status": "passing"
+        },
+        {
+          "latex": "x_{i}",
+          "expected_hwp": "x_{i}",
+          "description": "아래 첨자",
+          "status": "passing"
+        }
+      ]
+    },
+    {
+      "category": "fractions",
+      "description": "분수 표현",
+      "equations": [
+        {
+          "latex": "\\frac{1}{2}",
+          "expected_hwp": "{1} over {2}",
+          "description": "기본 분수",
+          "status": "passing"
+        },
+        {
+          "latex": "\\frac{\\sqrt{2}}{2}",
+          "expected_hwp": "{sqrt {2}} over {2}",
+          "description": "분자에 제곱근이 있는 분수",
+          "status": "passing"
+        },
+        {
+          "latex": "\\frac{3}{2}\\pi",
+          "expected_hwp": "{3} over {2} pi",
+          "description": "분수와 그리스 문자 조합",
+          "status": "passing"
+        }
+      ]
+    },
+    {
+      "category": "roots",
+      "description": "제곱근 및 n제곱근",
+      "equations": [
+        {
+          "latex": "\\sqrt{24}",
+          "expected_hwp": "sqrt {24}",
+          "description": "기본 제곱근",
+          "status": "passing"
+        },
+        {
+          "latex": "\\sqrt{24} \\times 3^3",
+          "expected_hwp": "sqrt {24} * 3^3",
+          "description": "제곱근과 곱셈, 지수 조합",
+          "status": "passing"
+        },
+        {
+          "latex": "\\sqrt[3]{8}",
+          "expected_hwp": "nroot {3} {8}",
+          "description": "세제곱근",
+          "status": "pending"
+        },
+        {
+          "latex": "\\sqrt[n]{x}",
+          "expected_hwp": "nroot {n} {x}",
+          "description": "n제곱근",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "greek_letters",
+      "description": "그리스 문자",
+      "equations": [
+        {
+          "latex": "\\theta",
+          "expected_hwp": "theta",
+          "description": "세타",
+          "status": "passing"
+        },
+        {
+          "latex": "\\pi",
+          "expected_hwp": "pi",
+          "description": "파이",
+          "status": "passing"
+        },
+        {
+          "latex": "\\alpha",
+          "expected_hwp": "alpha",
+          "description": "알파",
+          "status": "pending"
+        },
+        {
+          "latex": "\\beta",
+          "expected_hwp": "beta",
+          "description": "베타",
+          "status": "pending"
+        },
+        {
+          "latex": "\\Delta",
+          "expected_hwp": "DELTA",
+          "description": "대문자 델타",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "trigonometric",
+      "description": "삼각함수",
+      "equations": [
+        {
+          "latex": "\\sin(x)",
+          "expected_hwp": "sin(x)",
+          "description": "사인 함수",
+          "status": "passing"
+        },
+        {
+          "latex": "\\sin(-\\theta)",
+          "expected_hwp": "sin(-theta)",
+          "description": "사인 함수 (음수 인자)",
+          "status": "passing"
+        },
+        {
+          "latex": "\\sin(-\\theta) = \\frac{1}{3}",
+          "expected_hwp": "sin(-theta) = {1} over {3}",
+          "description": "사인 함수 등식",
+          "status": "passing"
+        },
+        {
+          "latex": "\\tan\\theta",
+          "expected_hwp": "tan theta",
+          "description": "탄젠트 함수",
+          "status": "passing"
+        },
+        {
+          "latex": "\\cos(x)",
+          "expected_hwp": "cos(x)",
+          "description": "코사인 함수",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "limits",
+      "description": "극한",
+      "equations": [
+        {
+          "latex": "\\lim_{h \\to 0} \\frac{f(2+h) - f(2)}{h}",
+          "expected_hwp": "lim from {h -> 0} {f(2+h) - f(2)} over {h}",
+          "description": "미분의 정의 (극한)",
+          "status": "passing"
+        },
+        {
+          "latex": "\\lim_{x \\to \\infty} f(x)",
+          "expected_hwp": "lim from {x -> infinity} f(x)",
+          "description": "무한대로 가는 극한",
+          "status": "pending"
+        },
+        {
+          "latex": "\\lim_{n \\to \\infty} \\left(1 + \\frac{1}{n}\\right)^n",
+          "expected_hwp": "lim from {n -> infinity} (1 + {1} over {n})^n",
+          "description": "자연상수 e의 정의",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "summation_integration",
+      "description": "합과 적분",
+      "equations": [
+        {
+          "latex": "\\sum_{i=1}^{n} i",
+          "expected_hwp": "sum_{i=1}^{n} i",
+          "description": "시그마 합",
+          "status": "passing"
+        },
+        {
+          "latex": "\\int_{0}^{1} x^2 dx",
+          "expected_hwp": "int_{0}^{1} x^2 dx",
+          "description": "정적분",
+          "status": "pending"
+        },
+        {
+          "latex": "\\prod_{i=1}^{n} i",
+          "expected_hwp": "prod_{i=1}^{n} i",
+          "description": "곱셈 기호",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "comparison_operators",
+      "description": "비교 연산자",
+      "equations": [
+        {
+          "latex": "\\frac{3}{2}\\pi < \\theta < 2\\pi",
+          "expected_hwp": "{3} over {2} pi < theta < 2 pi",
+          "description": "부등호 (작다)",
+          "status": "passing"
+        },
+        {
+          "latex": "x \\leq y",
+          "expected_hwp": "x <= y",
+          "description": "이하",
+          "status": "pending"
+        },
+        {
+          "latex": "x \\geq y",
+          "expected_hwp": "x >= y",
+          "description": "이상",
+          "status": "pending"
+        },
+        {
+          "latex": "x \\neq y",
+          "expected_hwp": "x != y",
+          "description": "같지 않다",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "special_symbols",
+      "description": "특수 기호",
+      "equations": [
+        {
+          "latex": "\\times",
+          "expected_hwp": "*",
+          "description": "곱하기 기호",
+          "status": "passing"
+        },
+        {
+          "latex": "\\cdot",
+          "expected_hwp": "*",
+          "description": "가운뎃점 곱하기",
+          "status": "pending"
+        },
+        {
+          "latex": "\\div",
+          "expected_hwp": "/",
+          "description": "나누기 기호",
+          "status": "pending"
+        },
+        {
+          "latex": "\\pm",
+          "expected_hwp": "+-",
+          "description": "플러스 마이너스",
+          "status": "pending"
+        },
+        {
+          "latex": "\\infty",
+          "expected_hwp": "infinity",
+          "description": "무한대",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "polynomials",
+      "description": "다항식",
+      "equations": [
+        {
+          "latex": "f(x) = 2x^3 - 5x^2 + 3",
+          "expected_hwp": "f(x) = 2x^3 - 5x^2 + 3",
+          "description": "3차 다항식",
+          "status": "passing"
+        },
+        {
+          "latex": "ax^2 + bx + c = 0",
+          "expected_hwp": "ax^2 + bx + c = 0",
+          "description": "2차 방정식",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "piecewise_functions",
+      "description": "조건부 함수 (cases)",
+      "equations": [
+        {
+          "latex": "f(x) = \\begin{cases} 3x - a & (x < 2) \\\\ x^2 + a & (x \\ge 2) \\end{cases}",
+          "expected_hwp": "f(x) = {cases{3x - a & (x < 2) # x^2 + a & (x >= 2)}}",
+          "description": "조건부 함수 정의",
+          "status": "passing"
+        }
+      ]
+    },
+    {
+      "category": "complex_nested",
+      "description": "복잡한 중첩 구조",
+      "equations": [
+        {
+          "latex": "-\\frac{\\sqrt{2}}{2}",
+          "expected_hwp": "-{sqrt {2}} over {2}",
+          "description": "음수 분수 + 제곱근",
+          "status": "passing"
+        },
+        {
+          "latex": "-\\frac{\\sqrt{2}}{4}",
+          "expected_hwp": "-{sqrt {2}} over {4}",
+          "description": "음수 분수 + 제곱근 (2)",
+          "status": "passing"
+        },
+        {
+          "latex": "\\frac{a + b}{c + d}",
+          "expected_hwp": "{a + b} over {c + d}",
+          "description": "분자/분모에 덧셈이 있는 분수",
+          "status": "pending"
+        },
+        {
+          "latex": "\\frac{\\frac{a}{b}}{c}",
+          "expected_hwp": "{{a} over {b}} over {c}",
+          "description": "이중 분수",
+          "status": "pending"
+        },
+        {
+          "latex": "\\sqrt{\\frac{a}{b}}",
+          "expected_hwp": "sqrt {{a} over {b}}",
+          "description": "제곱근 안의 분수",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "delimiters",
+      "description": "좌우 구분자",
+      "equations": [
+        {
+          "latex": "\\left\\{ a_{n} \\right\\}",
+          "expected_hwp": "LEFT { a_{n} RIGHT }",
+          "description": "중괄호 구분자",
+          "status": "passing"
+        }
+      ]
+    },
+    {
+      "category": "matrices",
+      "description": "행렬",
+      "equations": [
+        {
+          "latex": "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}",
+          "expected_hwp": "( a & b ; c & d )",
+          "description": "2x2 행렬 (소괄호)",
+          "status": "pending"
+        },
+        {
+          "latex": "\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}",
+          "expected_hwp": "[ 1 & 2 ; 3 & 4 ]",
+          "description": "2x2 행렬 (대괄호)",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "logarithms",
+      "description": "로그",
+      "equations": [
+        {
+          "latex": "\\log_{2} 8",
+          "expected_hwp": "log_{2} 8",
+          "description": "밑이 2인 로그",
+          "status": "pending"
+        },
+        {
+          "latex": "\\ln x",
+          "expected_hwp": "ln x",
+          "description": "자연로그",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "category": "ocr_errors",
+      "description": "OCR 오류 패턴 (복구 테스트)",
+      "equations": [
+        {
+          "latex": "\theta",
+          "expected_hwp": "theta",
+          "description": "탭 문자가 백슬래시를 대체한 경우",
+          "note": "OCR error: tab character instead of backslash",
+          "status": "passing"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "status 값: passing (테스트 통과), pending (미구현 또는 미테스트), failing (테스트 실패)",
+    "각 카테고리별로 테스트 케이스를 추가하면서 번역기를 발전시킬 것",
+    "expected_hwp는 HWP 수식 문법으로 변환된 결과",
+    "description은 해당 수식의 설명",
+    "note는 특별한 주의사항이나 OCR 오류 패턴 등을 기록"
+  ]
+}
