@@ -37,6 +37,7 @@ run_test() {
 # 모든 테스트 실행
 run_test "$SCRIPT_DIR/test_hello_world.sh"
 run_test "$SCRIPT_DIR/test_table_4x4.sh"
+run_test "$SCRIPT_DIR/test_translator.sh"
 
 # 최종 결과 출력
 echo ""
