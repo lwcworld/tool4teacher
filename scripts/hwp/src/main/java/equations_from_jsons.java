@@ -26,14 +26,14 @@ import java.util.regex.Pattern;
  * JSON 파일에서 LaTeX 수식을 추출하여 HWPX 파일의 수식으로 변환하는 예제
  *
  * 사용법:
- *   mvn compile exec:java -Dexec.mainClass="equations_from_json" \
+ *   mvn compile exec:java -Dexec.mainClass="equations_from_jsons" \
  *     -Dexec.args="<JSON_FILE_PATH>"
  *
  * 예시:
- *   mvn compile exec:java -Dexec.mainClass="equations_from_json" \
+ *   mvn compile exec:java -Dexec.mainClass="equations_from_jsons" \
  *     -Dexec.args="../../dataset/downloads/suneung/수학영역_문제지/page_0001.json"
  */
-public class equations_from_json {
+public class equations_from_jsons {
 
     /**
      * JSON 요소 클래스
@@ -379,7 +379,7 @@ public class equations_from_json {
 
             // HWPX 파일 생성
             System.out.println();
-            String outputPath = "output/equations_from_json_all.hwpx";
+            String outputPath = "output/equations_from_jsons.hwpx";
             createHwpxWithEquations(equations, outputPath);
 
         } catch (Exception e) {

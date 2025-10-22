@@ -38,6 +38,7 @@ run_test() {
 run_test "$SCRIPT_DIR/test_hello_world.sh"
 run_test "$SCRIPT_DIR/test_table_4x4.sh"
 run_test "$SCRIPT_DIR/test_translator.sh"
+run_test "$SCRIPT_DIR/test_equations_jsons.sh"
 
 # 최종 결과 출력
 echo ""
