@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -303,6 +305,14 @@ public class json_to_hwpx {
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject obj = jsonArray.get(i).getAsJsonObject();
             JsonElement element = gson.fromJson(obj, JsonElement.class);
+
+            if (obj.has("refined_text") && !obj.get("refined_text").isJsonNull()) {
+                String refinedText = obj.get("refined_text").getAsString();
+                if (refinedText != null && !refinedText.isEmpty()) {
+                    element.text = refinedText;
+                }
+            }
+
             // Picture 타입은 text가 없어도 추가
             if (element.isPicture() || (element.text != null && !element.text.isEmpty())) {
                 elements.add(element);
@@ -427,21 +437,30 @@ public class json_to_hwpx {
      * 디렉토리에서 page_*_*.json 패턴의 파일 찾기
      */
     public static List<File> findPageJsonFiles(String dirPath) {
-        List<File> jsonFiles = new ArrayList<>();
+        Map<String, File> fileMap = new TreeMap<>();
         File dir = new File(dirPath);
 
         if (!dir.exists() || !dir.isDirectory()) {
-            return jsonFiles;
+            return new ArrayList<>();
         }
 
-        File[] files = dir.listFiles((d, name) -> name.matches("page_\\d+_\\d+\\.json"));
-        if (files != null) {
-            for (File file : files) {
-                jsonFiles.add(file);
+        File[] refinedFiles = dir.listFiles((d, name) -> name.matches("page_\\d+_\\d+_refine\\.json"));
+        if (refinedFiles != null) {
+            for (File file : refinedFiles) {
+                String baseName = file.getName().replace("_refine.json", "");
+                fileMap.put(baseName, file);
             }
-            // 파일명으로 정렬
-            jsonFiles.sort((a, b) -> a.getName().compareTo(b.getName()));
         }
+
+        File[] originalFiles = dir.listFiles((d, name) -> name.matches("page_\\d+_\\d+\\.json"));
+        if (originalFiles != null) {
+            for (File file : originalFiles) {
+                String baseName = file.getName().replace(".json", "");
+                fileMap.putIfAbsent(baseName, file);
+            }
+        }
+
+        List<File> jsonFiles = new ArrayList<>(fileMap.values());
 
         return jsonFiles;
     }

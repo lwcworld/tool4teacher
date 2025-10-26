@@ -28,6 +28,7 @@ fi
 # 이전 출력 파일 삭제
 echo "기존 HWPX 파일 삭제 중..."
 find "$DEFAULT_PATH" -name "page_*.hwpx" -type f -delete 2>/dev/null || true
+find "$DEFAULT_PATH" -maxdepth 1 -name "page_*_refine.json" -type f -delete 2>/dev/null || true
 
 # Maven 컴파일
 echo "----------------------------------------"
@@ -35,13 +36,21 @@ echo "Maven 컴파일 중..."
 echo "----------------------------------------"
 mvn compile -q
 
+CLASSPATH="target/classes:$(mvn dependency:build-classpath -q -DincludeScope=runtime -Dmdep.outputFile=/dev/stdout)"
+
+# JSON refine 수행
+echo "----------------------------------------"
+echo "JSON refine 실행 중..."
+echo "----------------------------------------"
+java -cp "$CLASSPATH" refine_json "$DEFAULT_PATH"
+
 # Java 실행 (기본 경로 사용: ../../dataset/downloads/suneung/수학영역_문제지)
 echo "----------------------------------------"
 echo "json_to_hwpx 실행 중..."
 echo "----------------------------------------"
 
 # Java 직접 실행 (출력은 입력 디렉토리와 동일)
-java -cp "target/classes:$(mvn dependency:build-classpath -q -DincludeScope=runtime -Dmdep.outputFile=/dev/stdout)" json_to_hwpx "$DEFAULT_PATH"
+java -cp "$CLASSPATH" json_to_hwpx "$DEFAULT_PATH"
 
 # 출력 파일 확인
 echo "----------------------------------------"
