@@ -42,8 +42,8 @@ if [ ! -d "$DEFAULT_PATH" ]; then
     exit 0
 fi
 
-# run_equations.sh 실행 (기본 경로 사용)
-bash run_equations.sh
+# equations_from_jsons 실행 (기본 경로 사용)
+mvn -q exec:java -Dexec.mainClass="equations_from_jsons" -Dexec.cleanupDaemonThreads=false
 
 # 출력 파일 확인
 echo "----------------------------------------"

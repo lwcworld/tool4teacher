@@ -37,7 +37,13 @@ public class LatexToHwpTranslator {
         // 3. 분수 변환: \frac{분자}{분모} -> {분자} over {분모} (제곱근 변환 후 수행)
         hwp = translateFractions(hwp);
 
-        // 4. 특수 기호 변환 (공백 명령어 포함: \quad, \qquad 등)
+        // 4. \text{...} 변환 (텍스트 내 공백을 ~로 변환)
+        hwp = translateText(hwp);
+
+        // 5. \vec{...} 변환: \vec{a} -> {vec{a}}
+        hwp = translateVec(hwp);
+
+        // 6. 특수 기호 변환 (공백 명령어 포함: \quad, \qquad 등)
         hwp = translateSymbols(hwp);
 
         // 5. 선 위에 표시 (\overline 등) 변환
@@ -190,10 +196,25 @@ public class LatexToHwpTranslator {
 
     /**
      * 제곱근 변환: \sqrt{내용} -> sqrt {내용}
+     * \sqrt 앞에 문자나 숫자가 있으면 공백 추가
      */
     private static String translateSqrt(String latex) {
+        // \sqrt 앞에 문자/숫자가 있는 경우 공백 추가
+        Pattern patternWithPrefix = Pattern.compile("([a-zA-Z0-9])\\\\sqrt\\{([^{}]+)\\}");
+        Matcher matcherWithPrefix = patternWithPrefix.matcher(latex);
+        StringBuffer tempResult = new StringBuffer();
+
+        while (matcherWithPrefix.find()) {
+            String prefix = matcherWithPrefix.group(1);
+            String content = matcherWithPrefix.group(2);
+            String replacement = prefix + " sqrt {" + content + "}";
+            matcherWithPrefix.appendReplacement(tempResult, Matcher.quoteReplacement(replacement));
+        }
+        matcherWithPrefix.appendTail(tempResult);
+
+        // 나머지 \sqrt 변환
         Pattern pattern = Pattern.compile("\\\\sqrt\\{([^{}]+)\\}");
-        Matcher matcher = pattern.matcher(latex);
+        Matcher matcher = pattern.matcher(tempResult.toString());
         StringBuffer result = new StringBuffer();
 
         while (matcher.find()) {
@@ -626,20 +647,72 @@ public class LatexToHwpTranslator {
     }
 
     /**
+     * \text{...} 변환: 텍스트 내 공백을 ~로 변환
+     */
+    private static String translateText(String latex) {
+        Pattern pattern = Pattern.compile("\\\\text\\{([^}]+)\\}");
+        Matcher matcher = pattern.matcher(latex);
+        StringBuffer result = new StringBuffer();
+
+        while (matcher.find()) {
+            String text = matcher.group(1);
+            // 텍스트 내의 공백을 ~로 변환
+            String converted = text.replaceAll(" ", "~");
+            matcher.appendReplacement(result, Matcher.quoteReplacement(converted));
+        }
+        matcher.appendTail(result);
+
+        return result.toString();
+    }
+
+    /**
+     * \vec{...} 및 \overrightarrow{...} 변환: \vec{a} -> {vec{a}}, \overrightarrow{AX} -> vec{AX}
+     */
+    private static String translateVec(String latex) {
+        // \overrightarrow{...} 변환
+        Pattern overrightarrowPattern = Pattern.compile("\\\\overrightarrow\\{([^}]+)\\}");
+        Matcher overrightarrowMatcher = overrightarrowPattern.matcher(latex);
+        StringBuffer tempResult = new StringBuffer();
+
+        while (overrightarrowMatcher.find()) {
+            String content = overrightarrowMatcher.group(1);
+            String replacement = "vec{" + content + "}";
+            overrightarrowMatcher.appendReplacement(tempResult, Matcher.quoteReplacement(replacement));
+        }
+        overrightarrowMatcher.appendTail(tempResult);
+
+        // \vec{...} 변환
+        Pattern vecPattern = Pattern.compile("\\\\vec\\{([^}]+)\\}");
+        Matcher vecMatcher = vecPattern.matcher(tempResult.toString());
+        StringBuffer result = new StringBuffer();
+
+        while (vecMatcher.find()) {
+            String content = vecMatcher.group(1);
+            String replacement = "{vec{" + content + "}}";
+            vecMatcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+        vecMatcher.appendTail(result);
+
+        return result.toString();
+    }
+
+    /**
      * 특수 기호 변환
      */
     private static String translateSymbols(String latex) {
         // 공백 명령어
         latex = latex.replaceAll("\\\\qquad", "~~~~~~~~"); // 8칸 공백(~는 1칸)
         latex = latex.replaceAll("\\\\quad", "~~~~");      // 4칸 공백(~는 1칸)
-        latex = latex.replaceAll("\\\\,", " ");        // 작은 공백
-        latex = latex.replaceAll("\\\\;", "  ");       // 중간 공백
-        latex = latex.replaceAll("\\\\:", "  ");       // 중간 공백
+        // \\ (줄바꿈)를 보호하고 \ (백슬래시 공백)만 변환
+        latex = latex.replaceAll("(?<!\\\\)\\\\ ", "~~");  // 백슬래시 공백 -> 2칸 공백(~는 1칸), 단 \\는 제외
+        latex = latex.replaceAll("\\\\,", "~");        // 작은 공백
+        latex = latex.replaceAll("\\\\;", "~~");       // 중간 공백
+        latex = latex.replaceAll("\\\\:", "~~");       // 중간 공백
         latex = latex.replaceAll("\\\\!", "");         // 음수 공백 (무시)
 
         // 곱하기
-        latex = latex.replaceAll("\\\\times", " * ");
-        latex = latex.replaceAll("\\\\cdot", " * ");
+        latex = latex.replaceAll("\\\\times", " TIMES ");
+        latex = latex.replaceAll("\\\\cdot", " TIMES ");
 
         // 나누기
         latex = latex.replaceAll("\\\\div", " / ");
@@ -653,6 +726,19 @@ public class LatexToHwpTranslator {
 
         // 각도 기호
         latex = latex.replaceAll("\\\\angle", "ANGLE");
+
+        // 집합 기호
+        latex = latex.replaceAll("\\\\cap", " SMALLINTER ");
+        latex = latex.replaceAll("\\\\cup", " SMALLUNION ");
+
+        // 절댓값 기호
+        latex = latex.replaceAll("\\|", " vert ");
+
+        // 수직 기호
+        latex = latex.replaceAll("\\\\perp", " BOT ");
+
+        // 일반 곱하기 기호 * 를 TIMES로 변환
+        latex = latex.replaceAll("\\*", " TIMES ");
 
         return latex;
     }
@@ -805,7 +891,16 @@ public class LatexToHwpTranslator {
      */
     private static String postProcessCasesCell(String cell) {
         String trimmed = cell.trim();
-        return trimmed.replace("\\&", "&");
+
+        // 한글이 포함된 경우 공백을 ~로 변환
+        if (trimmed.matches(".*[가-힣]+.*")) {
+            trimmed = trimmed.replaceAll(" ", "~");
+        }
+
+        // \& 복구 (& 앞뒤의 ~를 제거하고 &로 변환)
+        trimmed = trimmed.replaceAll("~?\\\\&~?", "&");
+
+        return trimmed;
     }
 
     /**
